@@ -42,4 +42,20 @@ public class RecordService {
     public void destroy(Integer id) {
         this.recordRepository.deleteById(id);
     }
+
+    public void update(Integer id, RecordBindingModel bindingModel) {
+        DailyActivity dailyActivity = this.dailyActivityRepository.findById(bindingModel.getActivityType())
+                .orElseThrow(ResourceNotFoundException::new);
+
+        Record record = recordRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
+        record.setReps(bindingModel.getReps());
+        record.setSets(bindingModel.getSets());
+        record.setDailyActivity(dailyActivity);
+
+        this.recordRepository.save(record);
+    }
+
+    public Record getById(Integer id) {
+        return this.recordRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
+    }
 }
